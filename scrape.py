@@ -190,7 +190,7 @@ def build_master_position_file():
                 # Build out a master dict from all sources
                 for row in reader:
                     name_parts = row["Player"].split(" ")
-                    player_name = name_parts[0] + " " + name_parts[1]
+                    player_name = name_parts[0].replace(".", "") + " " + name_parts[1].replace(".", "")
                     if master_position.get(player_name):
                         master_position[player_name][website] = row["Tier"]
                     else:

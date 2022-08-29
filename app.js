@@ -1,4 +1,6 @@
 const fileInput = document.getElementById("positions");
+const reset = document.querySelector(".reset");
+let tableCount = 0;
 
 function handleFileSelect(event) {
   processFile(event.target.files[0])
@@ -56,9 +58,11 @@ function buildHtmlTable(tierList, tableID) {
     columns = addAllColumnHeaders(tierList, table);
   table.id = tableID
   table.classList.add("positionTable")
+  table.setAttribute("oncontextmenu", "return false;")
   for (let i = 0, maxi = tierList.length; i < maxi; ++i) {
     const tr = _tr_.cloneNode(false);
     tr.addEventListener("click", colorRow);
+    tr.addEventListener("contextmenu", resetRow);
     for (var j = 0, maxj = columns.length; j < maxj; ++j) {
       var td = _td_.cloneNode(false);
       var cellValue = tierList[i][columns[j]];
@@ -96,21 +100,37 @@ async function processFile(file) {
     const tableID = file.name.slice(0,2);
     let textData = await readFileAsync(file);
     let jsonData = convertCSV(textData);
-    const newPosition = document.createElement("div");
-    newPosition.classList.add("positionDiv");
-    const collapse = document.createElement("button");
-    collapse.textContent = "Collapse";
-    collapse.classList.add("collapsible");
-    collapse.addEventListener("click", collapseDiv)
-    const title = document.createElement("h1");
-    title.textContent = tableID;
-    newPosition.appendChild(title);
-    newPosition.appendChild(collapse);
-    newPosition.appendChild(buildHtmlTable(jsonData, tableID));
-    document.getElementById("tierLists").appendChild(newPosition);
+    let tableGroup;
+    const newPosition = buildElements(tableID, jsonData);
+    if (tableCount === 0 ) {
+      const collapse = document.createElement("button");
+      collapse.textContent = "Collapse";
+      collapse.classList.add("collapsible");
+      collapse.addEventListener("click", collapseDiv);
+      document.getElementById("tierLists").appendChild(collapse)
+      tableGroup = document.createElement("div");
+      tableGroup.classList.add("tableGroup");
+      document.getElementById("tierLists").appendChild(tableGroup);
+    } else {
+      const tableGroups = document.querySelectorAll(".tableGroup")
+      tableGroup = [].slice.call(tableGroups).pop()
+    }
+    tableGroup.appendChild(newPosition);
+    tableCount += 1
+    if (tableCount === 2) tableCount = 0;
   } catch (err) {
     console.log(err)
   }
+}
+
+function buildElements(tableID, jsonData) {
+  const newPosition = document.createElement("div");
+  newPosition.classList.add("positionDiv");
+  const title = document.createElement("h1");
+  title.textContent = tableID;
+  newPosition.appendChild(title);
+  newPosition.appendChild(buildHtmlTable(jsonData, tableID));
+  return newPosition
 }
 
 function collapseDiv() {
@@ -122,11 +142,16 @@ function collapseDiv() {
 }
 
 function colorRow() {
-  if (this.id === "red") {
-    this.id = "";
-  } else {
+  if (this.id === "") {
     this.id = "red";
+  } else if (this.id === "red") {
+    this.classList.add("hidden");
   }
+}
+
+function resetRow() {
+  this.id = "";
+  this.classList.remove("hidden");
 }
 
 function sortTable(table) {
@@ -162,5 +187,12 @@ function sortTable(table) {
     }
   }
 }
+
+reset.addEventListener("click", () => {
+  const hidden = document.querySelectorAll(".hidden");
+  hidden.forEach(element => {
+    element.classList.remove("hidden");
+  })
+})
 
 fileInput.addEventListener('change', handleFileSelect);

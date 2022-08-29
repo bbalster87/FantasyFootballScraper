@@ -10,7 +10,16 @@ h1 {
   background-color: Red;
 }
 
+.hidden {
+  display: none;
+}
+
 #tierLists {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableGroup {
   display: flex;
 }
 
