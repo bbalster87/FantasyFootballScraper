@@ -199,7 +199,7 @@ def build_master_position_file():
         with open("master/" + position + ".csv", "w") as fh:
             writer = csv.writer(fh)
             writer.writerow(
-                ["Player", "CBS", "Fantasy Nerds", "Washington Post", "Average"]
+                ["Player", "CBS", "FN", "WP", "Avg"]
             )
 
             for player, tiers in master_position.items():

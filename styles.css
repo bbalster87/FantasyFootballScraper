@@ -1,0 +1,48 @@
+* {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 18px;
+}
+
+#red {
+  background-color: Red;
+}
+
+#tierLists {
+  display: flex;
+}
+
+.positionDiv {
+  width: 23%;
+  margin: 4px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.positionTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.positionTable td, .positionTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  word-wrap: break-word;
+  max-width: 150px;
+}
+
+.positionTable tr:nth-child(even){background-color: #f2f2f2;}
+
+.positionTable tr:hover {background-color: #ddd;}
+
+.positionTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
